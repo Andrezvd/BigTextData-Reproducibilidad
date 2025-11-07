@@ -73,14 +73,18 @@ bigtext-hadoop-spark-clustering/
 ├── notebooks/                # Pruebas y exploraciones Jupyter
 │   └── EDA_big_text.ipynb
 │
+├── venv/                
+│   └── VIRTUAL ENV
+│
 ├── docs/                     # Documentación del proyecto
 │   ├── informe.pdf
 │   ├── referencias.bib
 │   └── presentacion.pptx
 │
-├── environment.yml           # Dependencias Conda/Python
-├── docker-compose.yml        # Para entorno Hadoop + Spark local
-├── Dockerfile
+├── environment.yml
+├── docker/                     
+│   ├── docker-compose.yml
+│ 
 ├── README.md
 └── .gitignore
 
