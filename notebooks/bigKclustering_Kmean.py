@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pyspark import StorageLevel
 from pyspark.sql import SparkSession
 from pyspark.ml.clustering import KMeans
 import time
@@ -10,6 +11,8 @@ spark = SparkSession.builder.appName("AgrupacionKMeans").getOrCreate()
 # RECORDAR CAMBIAR RUTA PARA CLUSTER UIS
 ruta_tfidf = "hdfs://namenode:9000/user/spark/data/vectorized_tfidf/"
 df = spark.read.parquet(ruta_tfidf)
+
+df = df.repartition(8)  
 
 # K=2 SE REFIERE A 2 AGRUPACIONES (RESEÑAS BUENAS O RESEÑAS MALAS)
 kmeans = KMeans(k=2, seed=42, featuresCol="features", predictionCol="grupo")
