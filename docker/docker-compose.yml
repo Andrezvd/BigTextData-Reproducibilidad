@@ -1,3 +1,5 @@
+# ARCHIVO DE DOCKER COMPOSE PARA UN CLUSTER HADOOP BASICO CON HDFS Y YARN
+# NO SE USA EN CLUSTER UIS
 version: '3.8'
 
 services:
@@ -73,4 +75,43 @@ services:
       - resourcemanager
     networks:
       - hadoop
+
+  spark-master:
+    image: apache/spark:3.5.1
+    container_name: spark-master
+    command: bash -c "/opt/spark/sbin/start-master.sh && tail -f /dev/null"
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    volumes:
+      - ../notebooks:/opt/spark/scripts
+      - ../data:/opt/spark/data
+      - ../src/spark:/opt/spark/procesamientosSpark
+    networks:
+      - hadoop
+
+
+  spark-worker-1:
+    image: apache/spark:3.5.1
+    container_name: spark-worker-1
+    command: bash -c "/opt/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"
+    depends_on:
+      - spark-master
+    networks:
+      - hadoop
+
+
+  spark-worker-2:
+    image: apache/spark:3.5.1
+    container_name: spark-worker-2
+    command: bash -c "/opt/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"
+    depends_on:
+      - spark-master
+    networks:
+      - hadoop
+
+
+networks:
+  hadoop:
+    driver: bridge
 

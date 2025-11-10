@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import Tokenizer, StopWordsRemover, HashingTF, IDF
-from pyspark.sql.functions import col
 import time
 inicio = time.time()
 
@@ -9,7 +8,8 @@ spark = SparkSession.builder \
     .appName("VectorizacionTFIDF") \
     .getOrCreate()
 
-ruta_limpio = "hdfs://namenode:9000/user/andres/cleaned/"
+# RUTA DEL DATASET LIMPIO EN EL HDFS (CAMBIAR RUTA EN CLUSTER UIS)
+ruta_limpio = "hdfs://namenode:9000/user/spark/data/cleaned/"
 
 df = spark.read.text(ruta_limpio).withColumnRenamed("value", "texto")
 
@@ -30,10 +30,10 @@ idf = IDF(inputCol="rawFeatures", outputCol="features")
 idfModel = idf.fit(featurizedData)
 rescaledData = idfModel.transform(featurizedData)
 
-# GUARDAMOS LAS COLUMNAS QUE NOS IMPORTAN EN EL HDFS
-rescaledData.select("features").write.mode("overwrite").parquet("hdfs://namenode:9000/user/andres/vectorized_tfidf/")
+# GUARDAMOS LAS COLUMNAS QUE NOS IMPORTAN EN EL HDFS (CAMBIAR RUTA EN CLUSTER UIS)
+rescaledData.select("features").write.mode("overwrite").parquet("hdfs://namenode:9000/user/spark/data/vectorized_tfidf/")
 
-print("Vectorización TF-IDF completada y guardada en /user/andres/vectorized_tfidf/")
+print("Vectorización TF-IDF completada y guardada en /user/spark/data/vectorized_tfidf/")
 spark.stop()
 
 fin = time.time()

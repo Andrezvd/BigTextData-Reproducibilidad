@@ -1,2 +1,3 @@
 data/mi_dataset.csv
 data/Music.txt
+docker/vectorized_tfidf_local/
